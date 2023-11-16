@@ -1,6 +1,7 @@
 import axios, { AxiosError } from "axios";
 import { parseCookies } from "nookies";
 import { AuthTokenError } from "./errors/authTokenError";
+import { signOut } from "@/contexts/AuthContext";
 
 export function setupAPIClient(context = undefined) {
   let cookies = parseCookies(context);
@@ -19,6 +20,7 @@ export function setupAPIClient(context = undefined) {
     (error: AxiosError) => {
       if (error.response?.status === 401) {
         if (typeof window !== undefined) {
+          signOut();
         } else {
           return Promise.reject(new AuthTokenError());
         }

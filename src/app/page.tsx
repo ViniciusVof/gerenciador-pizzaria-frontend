@@ -27,10 +27,8 @@ export default function Home() {
   }
   return (
     <>
-      <head>
-        <title>Gerenciador - Login</title>
-      </head>
-      <div className={styles.containerCenter}>
+      <title>Gerenciador - Login</title>
+      <main className={styles.containerCenter}>
         <Image src={logoImg} alt="Logo Gerenciador" />
         <div className={styles.login}>
           <form onSubmit={handleLogin}>
@@ -55,7 +53,7 @@ export default function Home() {
             Não possui uma conta? Cadastre-se
           </Link>
         </div>
-      </div>
+      </main>
     </>
   );
 }
