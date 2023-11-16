@@ -1,6 +1,4 @@
-export const metadata = {
-  title: "Gerenciador",
-};
+import { AuthProvider } from "@/contexts/AuthContext";
 import "@/styles/globals.scss";
 
 export default function RootLayout({
@@ -10,7 +8,10 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <body>{children}</body>
+      <head></head>
+      <body>
+        <AuthProvider>{children}</AuthProvider>
+      </body>
     </html>
   );
 }

@@ -24,7 +24,7 @@ export default function SignUp() {
           </Button>
         </form>
 
-        <Link href="/signup" className={styles.text}>
+        <Link href="/" className={styles.text}>
           Já possui uma conta? Faça o login
         </Link>
       </div>
