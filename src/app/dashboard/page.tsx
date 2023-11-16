@@ -1,3 +1,7 @@
 export default function Dashboard() {
-  return <p>Dashboard</p>;
+  return (
+    <div>
+      <h1>Bem vindo ao painel</h1>
+    </div>
+  );
 }
