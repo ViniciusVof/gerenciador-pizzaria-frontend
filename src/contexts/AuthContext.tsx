@@ -1,6 +1,8 @@
 "use client";
+import { api } from "@/services/apiClient";
 import Router from "next/router";
-import { destroyCookie } from "nookies";
+import { useRouter } from "next/navigation";
+import { destroyCookie, setCookie } from "nookies";
 import { createContext, ReactNode, useState } from "react";
 
 type UserProps =
@@ -41,8 +43,35 @@ export function signOut() {
 export function AuthProvider({ children }: AuthProviderProps) {
   const [user, setUser] = useState<UserProps>();
   const isAuthenticated = !!user;
+  const router = useRouter();
 
-  async function signIn({ email, password }: SignInProps) {}
+  async function signIn({ email, password }: SignInProps) {
+    try {
+      const response = await api.post("/session", {
+        email,
+        password,
+      });
+
+      const { id, name, token } = response.data;
+
+      setCookie(undefined, "@nextauth.token", token, {
+        maxAge: 60 * 60 * 24 * 30, //expirar em 1 mês);
+        path: "/",
+      });
+
+      setUser({
+        id,
+        name,
+        email,
+      });
+
+      api.defaults.headers["Authorization"] = `Bearer ${token}`;
+
+      router.push("/dashboard");
+    } catch (err) {
+      console.log("erro ao acessar", err);
+    }
+  }
 
   return (
     <AuthContext.Provider value={{ user, isAuthenticated, signIn, signOut }}>
