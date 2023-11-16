@@ -1,6 +1,5 @@
 "use client";
 import { AuthProvider } from "@/contexts/AuthContext";
-import AuthVerify from "@/hooks/AuthVerify";
 import "@/styles/globals.scss";
 import { ToastContainer } from "react-toastify";
 
@@ -15,7 +14,7 @@ export default function RootLayout({
     <html lang="en">
       <body>
         <AuthProvider>
-          <AuthVerify>{children}</AuthVerify>
+          {children}
           <ToastContainer autoClose={3000} />
         </AuthProvider>
       </body>

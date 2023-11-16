@@ -1,9 +1,9 @@
 "use client";
 import { api } from "@/services/apiClient";
 import Router from "next/router";
-import { useRouter } from "next/navigation";
-import { destroyCookie, setCookie } from "nookies";
-import { createContext, ReactNode, useState } from "react";
+import { usePathname, useRouter } from "next/navigation";
+import { destroyCookie, parseCookies, setCookie } from "nookies";
+import { createContext, ReactNode, useEffect, useState } from "react";
 import { toast } from "react-toastify";
 
 type UserProps =
@@ -51,7 +51,12 @@ export function signOut() {
 export function AuthProvider({ children }: AuthProviderProps) {
   const [user, setUser] = useState<UserProps>();
   const isAuthenticated = !!user;
+  const [isLoading, setLoading] = useState(true);
+  const cookies = parseCookies(undefined);
+  const token = cookies["@nextauth.token"];
   const router = useRouter();
+
+  const pathname = usePathname();
 
   async function signIn({ email, password }: SignInProps) {
     try {
@@ -98,11 +103,18 @@ export function AuthProvider({ children }: AuthProviderProps) {
     }
   }
 
+  useEffect(() => {
+    if (pathname !== "/" && !token) return router.push("/");
+    if (pathname === "/" && token) return router.push("/dashboard");
+
+    setLoading(false);
+  }, [pathname, token, router]);
+
   return (
     <AuthContext.Provider
       value={{ user, isAuthenticated, signIn, signOut, signUp }}
     >
-      {children}
+      {!isLoading && children}
     </AuthContext.Provider>
   );
 }
