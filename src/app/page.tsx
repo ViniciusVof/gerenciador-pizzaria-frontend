@@ -6,7 +6,7 @@ import styles from "@/styles/home.module.scss";
 import { Input } from "@/components/ui/Input";
 import { Button } from "@/components/ui/Button";
 import Link from "next/link";
-import { FormEvent, useContext, useState } from "react";
+import { FormEvent, useContext, useEffect, useState } from "react";
 import { AuthContext } from "@/contexts/AuthContext";
 import { toast } from "react-toastify";
 
