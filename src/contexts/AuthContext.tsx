@@ -52,8 +52,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
   const [user, setUser] = useState<UserProps>();
   const isAuthenticated = !!user;
   const [isLoading, setLoading] = useState(true);
-  const cookies = parseCookies(undefined);
-  const token = cookies["@nextauth.token"];
+  const { "@nextauth.token": token } = parseCookies();
   const router = useRouter();
 
   const pathname = usePathname();
@@ -102,6 +101,18 @@ export function AuthProvider({ children }: AuthProviderProps) {
       toast.error("Erro ao cadastrar");
     }
   }
+
+  useEffect(() => {
+    if (token) {
+      api
+        .get("/me")
+        .then((response) => {
+          const { id, name, email } = response.data;
+          setUser({ id, name, email });
+        })
+        .catch(() => signOut());
+    }
+  }, []);
 
   useEffect(() => {
     if (pathname !== "/" && !token) return router.push("/");
