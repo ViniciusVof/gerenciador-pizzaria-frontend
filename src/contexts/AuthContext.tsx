@@ -107,7 +107,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
       api
         .get("/me")
         .then((response) => {
-          const { id, name, email } = response.data;
+          const { id, name, email } = response.data.user;
           setUser({ id, name, email });
         })
         .catch(() => signOut());
