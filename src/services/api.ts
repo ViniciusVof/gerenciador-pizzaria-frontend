@@ -1,4 +1,8 @@
-import axios, { AxiosError } from "axios";
+import axios, {
+  AxiosError,
+  AxiosRequestConfig,
+  InternalAxiosRequestConfig,
+} from "axios";
 import { parseCookies } from "nookies";
 import { AuthTokenError } from "./errors/authTokenError";
 import { signOut } from "@/contexts/AuthContext";

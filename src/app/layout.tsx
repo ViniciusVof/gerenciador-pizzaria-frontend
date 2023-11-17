@@ -1,5 +1,7 @@
 "use client";
+import { Header } from "@/components/Header";
 import { AuthProvider } from "@/contexts/AuthContext";
+import { LoadingProvider } from "@/contexts/LoadingContext";
 import "@/styles/globals.scss";
 import { ToastContainer } from "react-toastify";
 
@@ -14,8 +16,12 @@ export default function RootLayout({
     <html lang="en">
       <body>
         <AuthProvider>
-          {children}
-          <ToastContainer autoClose={3000} />
+          <Header />
+
+          <LoadingProvider>
+            {children}
+            <ToastContainer autoClose={3000} />
+          </LoadingProvider>
         </AuthProvider>
       </body>
     </html>

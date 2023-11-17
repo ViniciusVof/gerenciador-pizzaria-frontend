@@ -6,7 +6,6 @@ export default function Dashboard() {
       <title>Painel Gerenciador</title>
 
       <div>
-        <Header />
         <h1>Painel</h1>
       </div>
     </>

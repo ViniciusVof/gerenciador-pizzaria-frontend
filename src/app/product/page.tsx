@@ -2,10 +2,20 @@
 import { Header } from "@/components/Header";
 import styles from "./styles.module.scss";
 import { FiUpload } from "react-icons/fi";
-import { ChangeEvent, useState } from "react";
+import { ChangeEvent, useContext, useEffect, useState } from "react";
 import Image from "next/image";
+import { LoadingContext } from "@/contexts/LoadingContext";
+import { api } from "@/services/apiClient";
+import { toast } from "react-toastify";
+
+type CategoriesRequest = {
+  id: string;
+  name: string;
+};
 
 export default function Product() {
+  const { setLoading } = useContext(LoadingContext);
+  const [categories, setCategories] = useState([]);
   const [avatarUrl, setAvatarUrl] = useState("");
   const [imageAvatar, setImageAvatar] = useState<File | null>(null);
 
@@ -19,6 +29,18 @@ export default function Product() {
       setAvatarUrl(URL.createObjectURL(image));
     }
   }
+
+  useEffect(() => {
+    setLoading(true);
+    api
+      .get("/categories")
+      .then((response) => {
+        setCategories(response.data);
+      })
+      .catch(() => toast.error("Erro ao listar categorias"))
+      .finally(() => setLoading(false));
+  }, []);
+
   return (
     <>
       <title>Novo Produto - Gerenciador</title>
@@ -47,8 +69,11 @@ export default function Product() {
               )}
             </label>
             <select>
-              <option>Bebidas</option>
-              <option>Pizzas</option>
+              {categories.map((category) => (
+                <option key={category.id} value={category.id}>
+                  {category.name}
+                </option>
+              ))}
             </select>
             <input
               type="text"

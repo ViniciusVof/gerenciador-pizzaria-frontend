@@ -38,10 +38,19 @@ type AuthProviderProps = {
 
 export const AuthContext = createContext({} as AuthContextData);
 
+export function signOut() {
+  try {
+    destroyCookie(undefined, "@nextauth.token");
+    window.location.href = "/";
+  } catch (err) {
+    console.log("Erro ao deslogar", err);
+  }
+}
+
 export function AuthProvider({ children }: AuthProviderProps) {
   const [user, setUser] = useState<UserProps>();
-  const isAuthenticated = !!user;
   const [isLoading, setLoading] = useState(true);
+  const isAuthenticated = !!user;
   const { "@nextauth.token": token } = parseCookies();
   const router = useRouter();
 
@@ -67,6 +76,8 @@ export function AuthProvider({ children }: AuthProviderProps) {
         email,
       });
 
+      console.log({ id, name, email });
+
       api.defaults.headers["Authorization"] = `Bearer ${token}`;
 
       toast.success("Logado com sucesso!");
@@ -89,15 +100,6 @@ export function AuthProvider({ children }: AuthProviderProps) {
       toast.success("Cadastrado com sucesso!");
     } catch (err) {
       toast.error("Erro ao cadastrar");
-    }
-  }
-
-  function signOut() {
-    try {
-      destroyCookie(undefined, "@nextauth.token");
-      router.push("/");
-    } catch (err) {
-      console.log("Erro ao deslogar", err);
     }
   }
 

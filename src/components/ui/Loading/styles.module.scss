@@ -1,0 +1,20 @@
+.container {
+  display: flex;
+  height: calc(100vh - 5rem);
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  svg {
+    animation: animateLoading 2s infinite;
+  }
+}
+
+@keyframes animateLoading {
+  from {
+      transform: rotate(0deg);
+  }
+  to {
+      transform: rotate(360deg);
+  }
+  
+}

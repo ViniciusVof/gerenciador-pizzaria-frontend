@@ -27,7 +27,6 @@ export default function Category() {
     <>
       <title>Nova categoria - Gerenciador</title>
       <div>
-        <Header />
         <main className={styles.container}>
           <h1>Cadastrar categorias</h1>
 
