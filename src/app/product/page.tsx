@@ -50,7 +50,6 @@ export default function Product() {
     <>
       <title>Novo Produto - Gerenciador</title>
       <div>
-        <Header />
         <main className={styles.container}>
           <h1>Novo produto</h1>
           <form className={styles.form}>
