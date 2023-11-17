@@ -8,7 +8,7 @@ import { useContext } from "react";
 import { AuthContext } from "@/contexts/AuthContext";
 
 export function Header() {
-  const { user, signOut } = useContext(AuthContext);
+  const { signOut } = useContext(AuthContext);
   return (
     <header className={styles.headerContainer}>
       <div className={styles.headerContent}>
@@ -16,7 +16,7 @@ export function Header() {
           <Image src="/logo.svg" width={190} height={60} alt="Gerenciador" />
         </Link>
         <nav className={styles.menuNav}>
-          <Link href="/category">Categoria</Link>
+          <Link href="/category">Nova categoria</Link>
           <Link href="/product">Cardápio</Link>
           <button onClick={signOut}>
             <FiLogOut color="#FFF" size={24} />

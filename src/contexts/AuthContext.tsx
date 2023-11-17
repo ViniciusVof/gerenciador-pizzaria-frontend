@@ -1,6 +1,5 @@
 "use client";
 import { api } from "@/services/apiClient";
-import Router from "next/router";
 import { usePathname, useRouter } from "next/navigation";
 import { destroyCookie, parseCookies, setCookie } from "nookies";
 import { createContext, ReactNode, useEffect, useState } from "react";
@@ -38,15 +37,6 @@ type AuthProviderProps = {
 };
 
 export const AuthContext = createContext({} as AuthContextData);
-
-export function signOut() {
-  try {
-    destroyCookie(undefined, "@nextauth.token");
-    Router.push("/");
-  } catch {
-    console.log("Erro ao deslogar");
-  }
-}
 
 export function AuthProvider({ children }: AuthProviderProps) {
   const [user, setUser] = useState<UserProps>();
@@ -99,6 +89,15 @@ export function AuthProvider({ children }: AuthProviderProps) {
       toast.success("Cadastrado com sucesso!");
     } catch (err) {
       toast.error("Erro ao cadastrar");
+    }
+  }
+
+  function signOut() {
+    try {
+      destroyCookie(undefined, "@nextauth.token");
+      router.push("/");
+    } catch (err) {
+      console.log("Erro ao deslogar", err);
     }
   }
 
