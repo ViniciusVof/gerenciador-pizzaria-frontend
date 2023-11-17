@@ -15,8 +15,14 @@ type CategoriesRequestData = {
 
 export default function Product() {
   const { setLoadingPage } = useContext(LoadingContext);
-  const [categories, setCategories] = useState([]);
-  const [categorySelected, setCategorySelected] = useState("");
+  const [loading, setLoading] = useState(false);
+
+  const [name, setName] = useState("");
+  const [price, setPrice] = useState("");
+  const [description, setDescription] = useState("");
+
+  const [categories, setCategories] = useState<CategoriesRequestData[]>([]);
+  const [categorySelected, setCategorySelected] = useState(0);
   const [avatarUrl, setAvatarUrl] = useState("");
   const [imageAvatar, setImageAvatar] = useState<File | null>(null);
 
@@ -32,11 +38,12 @@ export default function Product() {
   }
 
   function handleChangeCategory(e: ChangeEvent<HTMLSelectElement>) {
-    setCategorySelected(e.target.value);
+    setCategorySelected(Number(e.target.value));
   }
 
   useEffect(() => {
     setLoadingPage(true);
+
     api
       .get("/categories")
       .then((response) => {
@@ -46,13 +53,49 @@ export default function Product() {
       .finally(() => setLoadingPage(false));
   }, []);
 
+  async function handleRegister(event: FormEvent) {
+    event.preventDefault();
+    setLoading(true);
+    const data = new FormData();
+
+    if (!name || !price || !description || !imageAvatar) {
+      toast.error("Preencha todos os campos");
+      return;
+    }
+
+    data.append("name", name);
+    data.append("price", price);
+    data.append("description", name);
+    data.append("category_id", categories[categorySelected].id);
+    data.append("file", imageAvatar);
+
+    api
+      .post("/product", data)
+      .then(() => {
+        toast.success("Produto cadastrado com sucesso");
+      })
+      .catch((err) => {
+        toast.error("Erro ao cadastrar produto");
+        console.log(err);
+      })
+      .finally(() => {
+        setLoading(false);
+        setName("");
+        setPrice("");
+        setDescription("");
+        setCategorySelected(0);
+        setImageAvatar(null);
+        setAvatarUrl("");
+      });
+  }
+
   return (
     <>
       <title>Novo Produto - Gerenciador</title>
       <div>
         <main className={styles.container}>
           <h1>Novo produto</h1>
-          <form className={styles.form}>
+          <form className={styles.form} onSubmit={handleRegister}>
             <label className={styles.labelAvatar}>
               <span>
                 <FiUpload size={30} color="#FFF" />
@@ -83,15 +126,21 @@ export default function Product() {
               type="text"
               className={styles.input}
               placeholder="Digite o nome do produto"
+              value={name}
+              onChange={(e) => setName(e.target.value)}
             />
             <input
               type="text"
               className={styles.input}
               placeholder="Preço do produto"
+              value={price}
+              onChange={(e) => setPrice(e.target.value)}
             />
             <textarea
               className={styles.input}
               placeholder="Descreva seu produto"
+              value={description}
+              onChange={(e) => setDescription(e.target.value)}
             ></textarea>
 
             <button className={styles.buttonAdd}>Cadastrar</button>
