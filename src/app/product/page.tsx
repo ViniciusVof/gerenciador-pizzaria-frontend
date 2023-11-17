@@ -2,20 +2,21 @@
 import { Header } from "@/components/Header";
 import styles from "./styles.module.scss";
 import { FiUpload } from "react-icons/fi";
-import { ChangeEvent, useContext, useEffect, useState } from "react";
+import { ChangeEvent, FormEvent, useContext, useEffect, useState } from "react";
 import Image from "next/image";
 import { LoadingContext } from "@/contexts/LoadingContext";
 import { api } from "@/services/apiClient";
 import { toast } from "react-toastify";
 
-type CategoriesRequest = {
+type CategoriesRequestData = {
   id: string;
   name: string;
 };
 
 export default function Product() {
-  const { setLoading } = useContext(LoadingContext);
+  const { setLoadingPage } = useContext(LoadingContext);
   const [categories, setCategories] = useState([]);
+  const [categorySelected, setCategorySelected] = useState("");
   const [avatarUrl, setAvatarUrl] = useState("");
   const [imageAvatar, setImageAvatar] = useState<File | null>(null);
 
@@ -30,15 +31,19 @@ export default function Product() {
     }
   }
 
+  function handleChangeCategory(e: ChangeEvent<HTMLSelectElement>) {
+    setCategorySelected(e.target.value);
+  }
+
   useEffect(() => {
-    setLoading(true);
+    setLoadingPage(true);
     api
       .get("/categories")
       .then((response) => {
         setCategories(response.data);
       })
       .catch(() => toast.error("Erro ao listar categorias"))
-      .finally(() => setLoading(false));
+      .finally(() => setLoadingPage(false));
   }, []);
 
   return (
@@ -68,10 +73,10 @@ export default function Product() {
                 />
               )}
             </label>
-            <select>
-              {categories.map((category) => (
-                <option key={category.id} value={category.id}>
-                  {category.name}
+            <select onChange={handleChangeCategory} value={categorySelected}>
+              {categories.map(({ id, name }: CategoriesRequestData, index) => (
+                <option key={id} value={index}>
+                  {name}
                 </option>
               ))}
             </select>

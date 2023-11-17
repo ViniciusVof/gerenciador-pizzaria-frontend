@@ -9,8 +9,8 @@ import {
 import { Loading } from "@/components/ui/Loading";
 
 type LoadingContextData = {
-  isLoading: boolean;
-  setLoading: Dispatch<SetStateAction<boolean>>;
+  isLoadingPage: boolean;
+  setLoadingPage: Dispatch<SetStateAction<boolean>>;
 };
 
 type LoadingProviderProps = {
@@ -20,11 +20,11 @@ type LoadingProviderProps = {
 export const LoadingContext = createContext({} as LoadingContextData);
 
 export function LoadingProvider({ children }: LoadingProviderProps) {
-  const [isLoading, setLoading] = useState(false);
+  const [isLoadingPage, setLoadingPage] = useState(false);
 
   return (
-    <LoadingContext.Provider value={{ isLoading, setLoading }}>
-      {isLoading ? <Loading /> : children}
+    <LoadingContext.Provider value={{ isLoadingPage, setLoadingPage }}>
+      {isLoadingPage ? <Loading /> : children}
     </LoadingContext.Provider>
   );
 }
